@@ -69,7 +69,7 @@ for city in cities_list:
 
 extraction_dt = datetime.now().strftime("%Y%m%d%H%M%S")
 
-with open("temp_files/zillow_location_search_"+extraction_dt+".json") as file:
+with open("./temp_files/zillow_location_search_"+extraction_dt+".json", "w") as file:
     file = json.dump(zillow_results_list)
 
 del extraction_dt
