@@ -12,49 +12,49 @@ ZILLOW_API_HOST = os.getenv("ZILLOW_API_HOST")
 # Change these lists to DB calls in future version
 cities_list = [
     "Atlantis, FL",
-    #"Belle Glade, FL",
-    #"Boca Raton, FL",
-    #"Boynton Beach, FL",
+    "Belle Glade, FL",
+    "Boca Raton, FL",
+    "Boynton Beach, FL",
     #"Briny Breezes, FL",
     #"Cloud Lake, FL",
-    #"Delray Beach, FL",
+    "Delray Beach, FL",
     #"Glen Ridge, FL",
     #"Golf, FL"
-    #"Greenacres, FL",
+    "Greenacres, FL",
     #"Gulf Stream, FL",
-    #"Haverhill, FL",
+    "Haverhill, FL",
     #"Highland Beach, FL",
     #"Hobe Sound, FL",
-    #"Hypoluxo, FL",
-    #"Juno Beach, FL",
-    #"Jupiter, FL",
+    "Hypoluxo, FL",
+    "Juno Beach, FL",
+    "Jupiter, FL",
     #"Jupiter Inlet Colony, FL",
     #"Jupiter Island, FL",
     #"Lake Clarke Shores, FL",
-    #"Lake Park, FL",
-    #"Lake Worth, FL",
-    #"Lake Worth Beach, FL",
-    #"Lantana, FL",
-    #"Loxahatchee Groves, FL",
+    "Lake Park, FL",
+    "Lake Worth, FL",
+    "Lake Worth Beach, FL",
+    "Lantana, FL",
+    "Loxahatchee Groves, FL",
     #"Manalapan, FL",
-    #"Mangonia Park, FL",
-    #"North Palm Beach, FL",
+    "Mangonia Park, FL",
+    "North Palm Beach, FL",
     #"Ocean Ridge, FL",
     #"Pahokee, FL",
     #"Palm Beach, FL",
-    #"Palm Beach Gardens, FL",
+    "Palm Beach Gardens, FL",
     #"Palm Beach Shores, FL",
-    #"Palm Springs, FL",
+    "Palm Springs, FL",
     #"Palm City, FL",
-    #"Riviera Beach, FL",
-    #"Royal Palm Beach, FL",
+    "Riviera Beach, FL",
+    "Royal Palm Beach, FL",
     #"South Bay, FL",
     #"South Palm Beach, FL",
-    #"Stuart, FL",
+    "Stuart, FL",
     "Tequesta, FL",
-    #"Wellington, FL",
-    #"Westlake, FL",
-    #"West Palm Beach, FL"
+    "Wellington, FL",
+    "Westlake, FL",
+    "West Palm Beach, FL"
 ]
 
 home_types_str = "Apartments,Condos,Houses,Multi-Family,Townhomes"
@@ -69,12 +69,14 @@ for city in cities_list:
 
 extraction_dt = datetime.now().strftime("%Y%m%d%H%M%S")
 
-with open("./temp_files/zillow_location_search_"+extraction_dt+".json", "w") as file:
-    file = json.dump(zillow_results_list)
+json_filepath = "./temp_files/zillow_location_search_"+extraction_dt+".json"
+
+with open(json_filepath, "w") as file:
+    file = json.dump(zillow_results_list, file, indent = 4)
 
 del extraction_dt
 
-zillow_locations_df = transform_property_search_json(zillow_results_list)
+zillow_locations_df = transform_property_search_json(json_filepath)
 
 transformation_dt = datetime.now().strftime("%Y%m%d%H%M%S")
 
