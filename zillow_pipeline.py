@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from zillow_api_scripts.zillow_api_data_extraction import ZillowAPI
+from zillow_api_scripts.zillow_extractions import ZillowAPI
 
 load_dotenv()
 ZILLOW_API_KEY = os.getenv("ZILLOW_API_KEY")
