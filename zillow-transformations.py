@@ -50,4 +50,4 @@ def transform_property_search_json(json_filepath):
             "currency"
         ]
 
-        final_df = full_location_df[final_cols]
+        return full_location_df[final_cols]
