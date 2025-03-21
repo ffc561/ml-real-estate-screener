@@ -72,6 +72,8 @@ extraction_dt = datetime.now().strftime("%Y%m%d%H%M%S")
 with open("temp_files/zillow_location_search_"+extraction_dt+".json") as file:
     file = json.dump(zillow_results_list)
 
+del extraction_dt
+
 zillow_locations_df = transform_property_search_json(zillow_results_list)
 
 transformation_dt = datetime.now().strftime("%Y%m%d%H%M%S")
