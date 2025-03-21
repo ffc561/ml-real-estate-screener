@@ -50,7 +50,7 @@ cities_list = [
     #"Royal Palm Beach, FL",
     #"South Bay, FL",
     #"South Palm Beach, FL",
-    "Stuart, FL",
+    #"Stuart, FL",
     "Tequesta, FL",
     #"Wellington, FL",
     #"Westlake, FL",
