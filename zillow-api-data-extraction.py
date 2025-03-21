@@ -1,13 +1,5 @@
 #zillow-api data extraction script
 import requests
-import json
-
-import os
-from dotenv import load_dotenv
-
-load_dotenv()
-ZILLOW_API_KEY = os.getenv("ZILLOW_API_KEY")
-ZILLOW_API_HOST = os.getenv("ZILLOW_API_HOST")
 
 class ZillowAPI():
     def __init__(self, zillow_api_key, zillow_api_host, max_retries, retry_delay):
