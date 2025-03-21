@@ -4,8 +4,6 @@ import numpy as np
 import json
 from datetime import datetime
 
-pd.set_option('display.max_columns', 10000)
-
 # Work in progress. Only base JSON normalization performed at the moment.
 def transform_individual_property_json(json_filepath):
     with open(json_filepath) as json_data:
