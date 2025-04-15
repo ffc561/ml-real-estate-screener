@@ -7,7 +7,11 @@ from datetime import datetime
 # Work in progress. Only base JSON normalization performed at the moment.
 def transform_individual_property_json(json_filepath):
     with open(json_filepath) as json_data:
-        return pd.json_normalize(json.load(json_data))
+        details_df = pd.json_normalize(json.load(json_data))
+    
+    details_df['extracted_at'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    return details_df
 
 # Work in progress. Only base JSON normalization and basic transformations performed at the moment.
 def transform_property_search_json(json_filepath):
@@ -48,4 +52,8 @@ def transform_property_search_json(json_filepath):
             "currency"
         ]
 
-        return full_location_df[final_cols]
+        final_df = full_location_df[final_cols]
+
+        final_df['extracted_at'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        return final_df
