@@ -18,7 +18,7 @@ zip_codes_list = [
 
 home_types_str = "Apartments,Condos,Houses,Multi-Family,Townhomes"
 
-zillow = ZillowAPI(ZILLOW_API_KEY, ZILLOW_API_HOST, 3, 5)
+zillow = ZillowAPI(zillow_api_key = ZILLOW_API_KEY, zillow_api_host = ZILLOW_API_HOST, max_retries = 3, retry_delay = 5)
 
 zillow_results_list = []
 
