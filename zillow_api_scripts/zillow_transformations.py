@@ -192,6 +192,16 @@ def transform_individual_property_detail_records(json_filepath):
 
     return final_df
 
+def explode_nested_property_details(json_filepath, column_name):
+
+    with open(json_filepath) as json_data:
+         details_df = pd.json_normalize(json.load(json_data))
+    
+    try:
+        return details_df[['zpid', column_name]].explode(column_name)
+    except:
+        print("Column could not be exploded.  Check column name and try again.")
+
 # Work in progress. Only base JSON normalization and basic transformations performed at the moment.
 def transform_property_search_json(json_filepath):
 
