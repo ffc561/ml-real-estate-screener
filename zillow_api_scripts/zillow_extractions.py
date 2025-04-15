@@ -1,5 +1,6 @@
 #zillow-api data extraction script
 import requests
+import time
 
 class ZillowAPI():
     def __init__(self, zillow_api_key, zillow_api_host, max_retries, retry_delay):
@@ -18,11 +19,28 @@ class ZillowAPI():
 
         resp = requests.get(url = request_url, headers = request_headers, params = request_params)
 
-        # Expand this to handle different error codes in different ways (i.e. retry after delay on 429)
         if resp.status_code != 200:
+        
             print("Error in API Extraction: " + str(resp.status_code))
             print(resp.reason)
-            return None
+            print("Retrying API call...")
+
+            time.sleep(self.retry_delay)
+            
+            retries = 0
+            
+            while retries <= self.max_retries:
+                retry_resp = requests.get(url = request_url, headers = request_headers, params = request_params)
+                if retry_resp.status_code == 200:
+                    break
+                else:
+                    retries += 1
+            
+            if retry_resp == 200:
+                return retry_resp.json()
+            else:
+                return None
+        
         else:
             print("API call successful!")
             return resp.json()
