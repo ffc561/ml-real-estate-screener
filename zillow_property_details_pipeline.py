@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 from dotenv import load_dotenv
 from zillow_api_scripts.zillow_extractions import ZillowAPI
-from zillow_api_scripts.zillow_transformations import transform_individual_property_detail_records
+from zillow_api_scripts.zillow_transformations import transform_individual_property_detail_records, explode_nested_property_details
 
 load_dotenv()
 ZILLOW_API_KEY = os.getenv("ZILLOW_API_KEY")
@@ -38,5 +38,11 @@ del extraction_dt
 
 transformation_dt = datetime.now().strftime("%Y%m%d%H%M%S")
 
-zillow_locations_df = transform_individual_property_detail_records(json_filepath)
-zillow_locations_df.to_csv("temp_files/zillow_property_details_"+transformation_dt+".csv", index = False)
+zillow_property_details_df = transform_individual_property_detail_records(json_filepath)
+zillow_property_details_df.to_csv("temp_files/zillow_property_details_"+transformation_dt+".csv", index = False)
+
+zillow_property_tax_history_df = explode_nested_property_details(json_filepath, "taxHistory")
+zillow_property_tax_history_df.to_csv("temp_files/zillow_property_tax_history_"+transformation_dt+".csv", index = False)
+
+zillow_property_price_history_df = explode_nested_property_details(json_filepath, "priceHistory")
+zillow_property_price_history_df.to_csv("temp_files/zillow_property_price_history_"+transformation_dt+".csv", index = False)
