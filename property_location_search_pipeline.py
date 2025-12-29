@@ -2,23 +2,21 @@ import os
 import json
 from datetime import datetime
 from dotenv import load_dotenv
-from zillow_api_scripts.zillow_extractions import ZillowAPI
-from zillow_api_scripts.zillow_transformations import transform_property_search_json
+from housing_market_data_api_scripts.housing_market_data_extractions import UhmdApi
+from housing_market_data_api_scripts.housing_market_data_transformations import transform_property_search_json
 
 load_dotenv()
-ZILLOW_API_KEY = os.getenv("ZILLOW_API_KEY")
-ZILLOW_API_HOST = os.getenv("ZILLOW_API_HOST")
+UHMD_API_KEY = os.getenv("UHMD_API_KEY")
+UHMD_API_HOST = os.getenv("UHMD_API_HOST")
 
 # Change these lists to DB calls in future version
 zip_codes_list = [
-    "33401",
-    "33477",
     "33407"
 ]
 
 home_types_str = "Apartments,Condos,Houses,Multi-Family,Townhomes"
 
-zillow = ZillowAPI(zillow_api_key = ZILLOW_API_KEY, zillow_api_host = ZILLOW_API_HOST, max_retries = 3, retry_delay = 5)
+zillow = UhmdApi(api_key = UHMD_API_KEY, api_host = UHMD_API_HOST, max_retries = 3, retry_delay = 5)
 
 zillow_results_list = []
 
