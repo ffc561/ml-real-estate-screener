@@ -1,16 +1,16 @@
-#zillow-api data extraction script
+#US housing market api data extraction
 import requests
 import time
 
-class ZillowAPI():
-    def __init__(self, zillow_api_key, zillow_api_host, max_retries, retry_delay):
-        self.api_key = zillow_api_key
-        self.api_host = zillow_api_host
-        self.root_url = 'https://' + zillow_api_host
+class UhmdApi():
+    def __init__(self, api_key, api_host, max_retries, retry_delay):
+        self.api_key = api_key
+        self.api_host = api_host
+        self.root_url = 'https://' + api_host
         self.max_retries = max_retries
         self.retry_delay = retry_delay
 
-    def call_zillow_api(self, request_url, request_params):
+    def call_api(self, request_url, request_params):
     
         request_headers = {
             "x-rapidapi-key" : self.api_key,
@@ -64,7 +64,7 @@ class ZillowAPI():
 
         while i <= max_pages:
             params["page"] = i
-            data = self.call_zillow_api(url, params)
+            data = self.call_api(url, params)
             all_data.append(data)
             if data["totalPages"] != 20:
                 max_pages = data["totalPages"]
@@ -75,4 +75,4 @@ class ZillowAPI():
     def get_property_details_by_zpid(self, property_zpid):
         url = self.root_url + "/property"
         params = {"zpid" : property_zpid}
-        return self.call_zillow_api(url, params)
+        return self.call_api(url, params)
