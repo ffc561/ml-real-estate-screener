@@ -3,17 +3,17 @@ import os
 import json
 from datetime import datetime
 from dotenv import load_dotenv
-from zillow_api_scripts.zillow_extractions import ZillowAPI
-from zillow_api_scripts.zillow_transformations import transform_individual_property_detail_records, explode_nested_property_details
+from housing_market_data_api_scripts.housing_market_data_extractions import UhmdApi
+from housing_market_data_api_scripts.housing_market_data_transformations import transform_individual_property_detail_records, explode_nested_property_details
 
 load_dotenv()
-ZILLOW_API_KEY = os.getenv("ZILLOW_API_KEY")
-ZILLOW_API_HOST = os.getenv("ZILLOW_API_HOST")
-zillow = ZillowAPI(zillow_api_key = ZILLOW_API_KEY, zillow_api_host = ZILLOW_API_HOST, max_retries = 3, retry_delay = 10)
+UHMD_API_KEY = os.getenv("UHMD_API_KEY")
+UHMD_API_HOST = os.getenv("UHMD_API_HOST")
+uhmd = UhmdApi(api_key = UHMD_API_KEY, api_host = UHMD_API_HOST, max_retries = 3, retry_delay = 10)
 
 # Get list of properties that require a detail lookup
 # NOTE: Replace this with database query once db support is built out
-temp_filepath = './temp_files/zillow_location_search_20250413233704.csv'
+temp_filepath = './temp_files/zillow_location_search_20251229122008.csv'
 properties_df = pd.read_csv(temp_filepath)
 
 zpids_list = properties_df['zpid'].unique().tolist()
@@ -24,7 +24,7 @@ property_details_list = []
 
 #Temporarily limited to last 10 ids for testing
 for zpid in zpids_list[-11:]:
-    detail = zillow.get_property_details_by_zpid(zpid)
+    detail = uhmd.get_property_details_by_zpid(zpid)
     property_details_list.append(detail)
 
 extraction_dt = datetime.now().strftime("%Y%m%d%H%M%S")
