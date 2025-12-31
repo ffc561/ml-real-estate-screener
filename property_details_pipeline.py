@@ -2,6 +2,7 @@ import pandas as pd
 import os
 import json
 from datetime import datetime
+import time
 from dotenv import load_dotenv
 from housing_market_data_api_scripts.housing_market_data_extractions import UhmdApi
 from housing_market_data_api_scripts.housing_market_data_transformations import transform_individual_property_detail_records, explode_nested_property_details
@@ -9,7 +10,7 @@ from housing_market_data_api_scripts.housing_market_data_transformations import 
 load_dotenv()
 UHMD_API_KEY = os.getenv("UHMD_API_KEY")
 UHMD_API_HOST = os.getenv("UHMD_API_HOST")
-uhmd = UhmdApi(api_key = UHMD_API_KEY, api_host = UHMD_API_HOST, max_retries = 3, retry_delay = 10)
+uhmd = UhmdApi(api_key = UHMD_API_KEY, api_host = UHMD_API_HOST, max_retries = 10, retry_delay = 60)
 
 # Get list of properties that require a detail lookup
 # NOTE: Replace this with database query once db support is built out
@@ -22,10 +23,15 @@ del properties_df
 
 property_details_list = []
 
-#Temporarily limited to last 10 ids for testing
-for zpid in zpids_list[-11:]:
+#Temporarily limited to first 100 ids for testing
+print(f"Number of properties to extract data on: {len(zpids_list)}")
+
+for zpid in zpids_list[100:225]:
+    print(f"Property ID: {zpid}")
     detail = uhmd.get_property_details_by_zpid(zpid)
-    property_details_list.append(detail)
+    time.sleep(5)
+    if detail is not None:
+        property_details_list.append(detail)
 
 extraction_dt = datetime.now().strftime("%Y%m%d%H%M%S")
 

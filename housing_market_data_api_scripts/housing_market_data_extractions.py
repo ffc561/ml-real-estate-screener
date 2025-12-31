@@ -21,31 +21,36 @@ class UhmdApi():
 
         if resp.status_code != 200:
         
-            print("Error in API Extraction: " + str(resp.status_code))
+            print(f"Error in API Extraction: {resp.status_code}")
             print(resp.reason)
             print("Retrying API call...")
 
             time.sleep(self.retry_delay)
             
-            retries = 0
+            retries = 1
             
             while retries <= self.max_retries:
                 retry_resp = requests.get(url = request_url, headers = request_headers, params = request_params)
                 if retry_resp.status_code == 200:
-                    break
+                    print("Retry successful.")
+                    return retry_resp.json()
                 else:
+                    print(f"Error in API Extraction: {resp.status_code}")
+                    print(resp.reason)
+                    print("Retrying API call...")
+                    print(f"Retry count: {retries}")
+                    time.sleep(self.retry_delay)
                     retries += 1
             
-            if retry_resp == 200:
-                return retry_resp.json()
-            else:
-                return None
+
+            print("Retries unsuccessful.")
+            return None
         
         else:
             print("API call successful!")
             return resp.json()
 
-    def get_property_extended_search(self, query_location, status_type, home_type):
+    def get_property_extended_search(self, query_location, status_type, home_type, page_call_delay=5):
         """
         Calls the zillow property extended search API
         """
@@ -65,8 +70,11 @@ class UhmdApi():
         while i <= max_pages:
             params["page"] = i
             data = self.call_api(url, params)
+            print(data)
             all_data.append(data)
-            if data["totalPages"] != 20:
+            if data == []:
+                max_pages = 1
+            elif data["totalPages"] != 20:
                 max_pages = data["totalPages"]
             i += 1
         
