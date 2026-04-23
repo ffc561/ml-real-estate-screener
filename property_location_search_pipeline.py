@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import time
 from housing_market_data_api_scripts.housing_market_data_extractions import UhmdApi
 from housing_market_data_api_scripts.housing_market_data_transformations import transform_property_search_json
+from db_scripts.db_utils import insert_zillow_listings_data
 
 load_dotenv()
 UHMD_API_KEY = os.getenv("UHMD_API_KEY")
@@ -92,8 +93,10 @@ with open(json_filepath, "w") as file:
 
 del extraction_dt
 
-zillow_locations_df = transform_property_search_json(json_filepath)
+property_records = []
+for result in zillow_results_list:
+    if result != []:
+        if result["totalResultCount"] != 0:
+            property_records.extend(result)
 
-transformation_dt = datetime.now().strftime("%Y%m%d%H%M%S")
-
-zillow_locations_df.to_csv(f"temp_files/zillow_location_search_{transformation_dt}.csv", index=False)
+insert_zillow_listings_data(property_records)
