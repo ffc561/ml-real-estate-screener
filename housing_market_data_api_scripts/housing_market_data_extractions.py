@@ -70,6 +70,7 @@ class UhmdApi():
         while i <= max_pages:
             params["page"] = i
             data = self.call_api(url, params)
+            print(i)
             print(data)
             all_data.append(data)
             if data == []:

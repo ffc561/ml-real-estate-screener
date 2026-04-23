@@ -18,7 +18,7 @@ zip_codes_list = [
     "33404",
     "33405",
     "33406",
-    #"33407",
+    "33407",
     "33408",
     "33409",
     "33410",
@@ -72,14 +72,20 @@ zillow_results_list = []
 for zip_code in zip_codes_list:
     print(f"ZIP Code: {zip_code}")
     location_json = zillow.get_property_extended_search(zip_code, "ForSale", home_types_str)
+    print("Location JSON")
     print(location_json)
-    if (location_json is not None) & (location_json != []):
-        zillow_results_list.extend(location_json)
+    empty1_mask = location_json is not None
+    empty2_mask = location_json != []
+    empty3_mask = location_json != [[]]
+    print(len(location_json))
+    if empty1_mask & empty2_mask & empty3_mask:
+        if len(location_json) != 0:
+            zillow_results_list.extend(location_json)
     time.sleep(5)
 
 extraction_dt = datetime.now().strftime("%Y%m%d%H%M%S")
 
-json_filepath = "./temp_files/zillow_location_search_"+extraction_dt+".json"
+json_filepath = f"./temp_files/zillow_location_search_{extraction_dt}.json"
 
 with open(json_filepath, "w") as file:
     file = json.dump(zillow_results_list, file, indent = 4)
@@ -90,4 +96,4 @@ zillow_locations_df = transform_property_search_json(json_filepath)
 
 transformation_dt = datetime.now().strftime("%Y%m%d%H%M%S")
 
-zillow_locations_df.to_csv("temp_files/zillow_location_search_"+transformation_dt+".csv", index=False)
+zillow_locations_df.to_csv(f"temp_files/zillow_location_search_{transformation_dt}.csv", index=False)

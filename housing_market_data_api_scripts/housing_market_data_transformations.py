@@ -1,5 +1,4 @@
 import pandas as pd
-import polars as pl
 import numpy as np
 import json
 from datetime import datetime
@@ -7,199 +6,23 @@ from datetime import datetime
 # Work in progress. Only base JSON normalization performed at the moment.
 def transform_individual_property_detail_records(json_filepath):
     with open(json_filepath) as json_data:
-        details_df = pd.json_normalize(json.load(json_data))
-    
-    final_cols = [
-        "zpid",
-        "url",
-        "streetAddress",
-        "address.community",
-        "city",
-        "cityId",
-        "county",
-        "countyId",
-        "state",
-        "stateId",
-        "zipcode",
-        "latitude",
-        "longitude",
-        "yearBuilt",
-        "description",
-        "bedrooms",
-        "bathrooms",
-        "homeType",
-        "propertyTypeDimension",
-        "climate.windSources.primary.insuranceRecommendation",
-        "climate.windSources.primary.riskScore.label",
-        "climate.windSources.primary.insuranceSeparatePolicy",
-        "climate.floodSources.primary.insuranceRecommendation",
-        "climate.floodSources.primary.riskScore.label",
-        "climate.floodSources.primary.riskScore.value",
-        "climate.floodSources.primary.insuranceSeparatePolicy",
-        "climate.fireSources.primary.insuranceRecommendation",
-        "climate.fireSources.primary.riskScore.label",
-        "climate.fireSources.primary.riskScore.value",
-        "climate.fireSources.primary.insuranceSeparatePolicy",
-        "climate.heatSources.primary.riskScore.label",
-        "climate.airSources.primary.riskScore.label",
-        "climate.airSources.primary.riskScore.value",
-        "resoFacts.hasAttachedProperty",
-        "resoFacts.frontageType",
-        "resoFacts.poolFeatures",
-        "resoFacts.flooring",
-        "resoFacts.accessibilityFeatures",
-        "resoFacts.hasGarage",
-        "resoFacts.hasPetsAllowed",
-        "resoFacts.bodyType",
-        "resoFacts.topography",
-        "resoFacts.landLeaseExpirationDate",
-        "resoFacts.hasAdditionalParcels",
-        "resoFacts.parkName",
-        "resoFacts.atAGlanceFacts",
-        "resoFacts.horseYN",
-        "resoFacts.view",
-        "resoFacts.rooms",
-        "resoFacts.belowGradeFinishedArea",
-        "resoFacts.feesAndDues",
-        "resoFacts.mainLevelBathrooms",
-        "resoFacts.hasPrivatePool",
-        "resoFacts.landLeaseAmount",
-        "resoFacts.waterSource",
-        "resoFacts.exteriorFeatures",
-        "resoFacts.inclusions",
-        "resoFacts.hasFireplace",
-        "resoFacts.gas",
-        "resoFacts.propertyCondition",
-        "resoFacts.exclusions",
-        "resoFacts.mainLevelBedrooms",
-        "resoFacts.hasWaterfrontView",
-        "resoFacts.bathroomsOneQuarter",
-        "resoFacts.lotSize",
-        "resoFacts.stories",
-        "resoFacts.livingArea",
-        "resoFacts.commonWalls",
-        "resoFacts.listingTerms",
-        "resoFacts.otherParking",
-        "resoFacts.associationFee",
-        "resoFacts.hasAttachedGarage",
-        "resoFacts.bedrooms",
-        "resoFacts.architecturalStyle",
-        "resoFacts.structureType",
-        "resoFacts.interiorFeatures",
-        "resoFacts.horseAmenities",
-        "resoFacts.garageParkingCapacity",
-        "resoFacts.developmentStatus",
-        "resoFacts.lotFeatures",
-        "resoFacts.roofType",
-        "resoFacts.daysOnZillow",
-        "resoFacts.elementarySchool",
-        "resoFacts.constructionMaterials",
-        "resoFacts.fireplaceFeatures",
-        "resoFacts.hoaFeeTotal",
-        "resoFacts.appliances",
-        "resoFacts.sewer",
-        "resoFacts.bathroomsPartial",
-        "resoFacts.fencing",
-        "resoFacts.spaFeatures",
-        "resoFacts.waterViewYN",
-        "resoFacts.buildingName",
-        "resoFacts.attic",
-        "resoFacts.petsMaxWeight",
-        "resoFacts.waterfrontFeatures",
-        "resoFacts.canRaiseHorses",
-        "resoFacts.hasLandLease",
-        "resoFacts.communityFeatures",
-        "resoFacts.waterBodyName",
-        "resoFacts.middleOrJuniorSchool",
-        "resoFacts.lotSizeDimensions",
-        "resoFacts.yearBuilt",
-        "resoFacts.utilities",
-        "resoFacts.bathroomsFull",
-        "resoFacts.parcelNumber",
-        "resoFacts.highSchool",
-        "resoFacts.storiesTotal",
-        "resoFacts.specialListingConditions",
-        "resoFacts.windowFeatures",
-        "resoFacts.woodedArea",
-        "resoFacts.roomTypes",
-        "resoFacts.frontageLength",
-        "resoFacts.roadSurfaceType",
-        "resoFacts.associationAmenities",
-        "resoFacts.propertySubType",
-        "resoFacts.hasCooling",
-        "resoFacts.levels",
-        "resoFacts.coveredParkingCapacity",
-        "resoFacts.zoning",
-        "resoFacts.hoaFee",
-        "resoFacts.parkingFeatures",
-        "resoFacts.parkingCapacity",
-        "resoFacts.cropsIncludedYN",
-        "resoFacts.tenantPays",
-        "resoFacts.otherStructures",
-        "resoFacts.additionalFeeInfo",
-        "resoFacts.hasView",
-        "resoFacts.openParkingCapacity",
-        "resoFacts.securityFeatures",
-        "resoFacts.numberOfUnitsInCommunity",
-        "resoFacts.hasHomeWarranty",
-        "resoFacts.basementYN",
-        "resoFacts.doorFeatures",
-        "resoFacts.associations",
-        "resoFacts.waterView",
-        "resoFacts.electric",
-        "resoFacts.buildingFeatures",
-        "resoFacts.hasOpenParking",
-        "resoFacts.hasCarport",
-        "resoFacts.bathroomsHalf",
-        "resoFacts.homeType",
-        "resoFacts.isSeniorCommunity",
-        "resoFacts.municipality",
-        "resoFacts.bathroomsThreeQuarter",
-        "resoFacts.hasSpa",
-        "resoFacts.cooling",
-        "resoFacts.hasHeating",
-        "resoFacts.otherEquipment",
-        "resoFacts.bathrooms",
-        "resoFacts.buildingArea",
-        "resoFacts.furnished",
-        "resoFacts.vegetation",
-        "resoFacts.patioAndPorchFeatures",
-        "resoFacts.hasElectricOnProperty",
-        "resoFacts.laundryFeatures",
-        "resoFacts.entryLocation",
-        "resoFacts.fireplaces",
-        "resoFacts.heating",
-        "resoFacts.carportParkingCapacity",
-        "resoFacts.hasAssociation",
-        "resoFacts.irrigationWaterRightsYN",
-        "resoFacts.isNewConstruction",
-        "resoFacts.associationFeeIncludes",
-        "resoFacts.pricePerSquareFoot",
-        "listingSubType.is_comingSoon",
-        "listingSubType.is_pending",
-        "listingSubType.is_forAuction",
-        "listingSubType.is_bankOwned",
-        "listingSubType.is_FSBA",
-        "listingSubType.is_FSBO",
-        "listingSubType.is_newHome",
-        "listingSubType.is_foreclosure",
-        "homeInsights"
-    ]
+        loaded_json = json.load(json_data)
+        property_details_df = pd.json_normalize(loaded_json)
 
-    final_df = details_df[final_cols]
+    property_details_df.set_index("zpid", inplace=True)
+    property_details_df['extracted_at'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    final_df['extracted_at'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return property_details_df
 
-    return final_df
-
-def explode_nested_property_details(json_filepath, column_name):
+def unnest_property_details(json_filepath, record_path):
 
     with open(json_filepath) as json_data:
-         details_df = pd.json_normalize(json.load(json_data))
+         loaded_json = json.load(json_data)
+         details_df = pd.json_normalize(loaded_json, record_path = record_path)
     
     try:
-        return details_df[['zpid', column_name]].explode(column_name)
-    except:
+        return details_df
+    except KeyError:
         print("Column could not be exploded.  Check column name and try again.")
 
 # Work in progress. Only base JSON normalization and basic transformations performed at the moment.
@@ -210,9 +33,12 @@ def transform_property_search_json(json_filepath):
         full_location_df = pd.DataFrame()
 
         for line in data:
-            location_df = pd.json_normalize(line['props'])
-            print(location_df.shape)
-            full_location_df = pd.concat([full_location_df, location_df])
+            if line != {} and line != []:
+                try:
+                    location_df = pd.json_normalize(line['props'])
+                    full_location_df = pd.concat([full_location_df, location_df])
+                except KeyError:
+                    print(f"Empty result.  Skipping.")
         
         final_cols = [
             "zpid",
