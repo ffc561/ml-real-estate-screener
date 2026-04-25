@@ -97,6 +97,6 @@ property_records = []
 for result in zillow_results_list:
     if result != []:
         if result["totalResultCount"] != 0:
-            property_records.extend(result)
+            property_records.extend(result["props"])
 
 insert_zillow_listings_data(property_records)
