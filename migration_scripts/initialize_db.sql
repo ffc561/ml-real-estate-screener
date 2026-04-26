@@ -7,25 +7,34 @@ CREATE TABLE IF NOT EXISTS public.zillow_listings_raw (
     unit VARCHAR(250),
     latitude DOUBLE PRECISION,
     longitude DOUBLE PRECISION,
-    num_bedrooms INT,
-    num_bathrooms NUMERIC, --Allow decimals for half bathrooms
+    bedrooms INT,
+    bathrooms NUMERIC, --Allow decimals for half bathrooms
     living_area NUMERIC(12, 1),
     lot_area_value NUMERIC(12, 1),
     lot_area_unit VARCHAR(10),
     price NUMERIC(12, 2),
+    price_change NUMERIC(12, 2),
     rent_zestimate NUMERIC(12, 2),
     zestimate NUMERIC(12, 2),
-    has_3d_model BOOLEAN,
+    has3_d_model BOOLEAN,
     has_video BOOLEAN,
     has_image BOOLEAN,
     property_type VARCHAR(50),
     listing_status VARCHAR(50),
-    listing_subtype JSONB,
-    detail_url VARCHAR(255),
+    listing_sub_type JSONB,
+    detail_url VARCHAR(1000),
     days_on_zillow INT,
     country VARCHAR(3),
     currency VARCHAR(3),
-    extracted_at TIMESTAMP
+    broker_name VARCHAR(1000),
+    carousel_photos JSONB,
+    coming_soon_on_market_date BIGINT,
+    contingent_listing_type VARCHAR(50),
+    date_price_changed BIGINT,
+    img_src VARCHAR(1000),
+    new_construction_type VARCHAR(255),
+    extracted_at TIMESTAMP,
+    updated_at TIMESTAMP
 );
 
 DROP TABLE IF EXISTS public.zillow_property_details_raw;
@@ -37,15 +46,15 @@ CREATE TABLE IF NOT EXISTS public.zillow_property_details_raw (
     attribution_info JSONB,
     bathrooms NUMERIC,
     bedrooms INTEGER,
-    broker_id VARCHAR(255),
-    brokerage_name VARCHAR(255),
-    building VARCHAR(255),
-    building_id VARCHAR(255),
+    broker_id VARCHAR(50),
+    brokerage_name VARCHAR(1000),
+    building VARCHAR(1000),
+    building_id VARCHAR(50),
     building_permits JSONB,
     city VARCHAR(100),
     city_id INTEGER,
     climate JSONB,
-    coming_soon_on_market_date DATE,
+    coming_soon_on_market_date BIGINT,
     contact_recipients JSONB,
     contingent_listing_type VARCHAR(255),
     country VARCHAR(100),
@@ -53,9 +62,10 @@ CREATE TABLE IF NOT EXISTS public.zillow_property_details_raw (
     county_fips VARCHAR(50),
     county_id INTEGER,
     currency VARCHAR(10),
-    date_posted DATE,
-    date_sold DATE,
+    date_posted VARCHAR(50),
+    date_sold VARCHAR(50),
     description TEXT,
+    estimated_sales_range JSONB,
     favorite_count INTEGER,
     home_facts JSONB,
     home_insights JSONB,
@@ -66,7 +76,7 @@ CREATE TABLE IF NOT EXISTS public.zillow_property_details_raw (
     is_showcase_listing BOOLEAN,
     latitude DOUBLE PRECISION,
     listed_by JSONB,
-    listing_provider VARCHAR(255),
+    listing_provider VARCHAR(1000),
     listing_sub_type JSONB,
     living_area NUMERIC,
     living_area_units VARCHAR(50),
@@ -85,7 +95,7 @@ CREATE TABLE IF NOT EXISTS public.zillow_property_details_raw (
     price NUMERIC,
     price_change NUMERIC,
     price_change_date BIGINT,
-    price_change_date_string DATE,
+    price_change_date_string VARCHAR(50),
     price_history JSONB,
     property_tax_rate NUMERIC,
     property_type_dimension VARCHAR(100),
@@ -96,7 +106,7 @@ CREATE TABLE IF NOT EXISTS public.zillow_property_details_raw (
     solar_potential JSONB,
     state VARCHAR(50),
     state_id INTEGER,
-    street_address VARCHAR(255),
+    street_address VARCHAR(2000),
     tax_history JSONB,
     time_on_zillow VARCHAR(100),
     time_zone VARCHAR(100),
@@ -106,14 +116,14 @@ CREATE TABLE IF NOT EXISTS public.zillow_property_details_raw (
     zestimate_high_percent VARCHAR(50),
     zestimate_low_percent VARCHAR(50),
     zipcode VARCHAR(20),
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
 DROP TABLE IF EXISTS public.zip_codes;
 
-CREATE TABLE IF NOT EXISTS public.zip_codes AS (
-    zipcode VARCHAR(20),
+CREATE TABLE IF NOT EXISTS public.zip_codes (
+    zipcode VARCHAR(20) PRIMARY KEY,
     latitude DOUBLE PRECISION,
     longitude DOUBLE PRECISION,
     primary_city VARCHAR(100),
@@ -126,5 +136,15 @@ CREATE TABLE IF NOT EXISTS public.zip_codes AS (
     county_weights JSONB,
     county_names_all VARCHAR(50),
     county_fips_all VARCHAR(50),
-    timezone VARCHAR(50)
+    timezone VARCHAR(50),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE UNIQUE INDEX idx_listings
+ON zillow_listings_raw (zpid, extracted_at);
+
+CREATE UNIQUE INDEX idx_property_details
+ON zillow_property_details_raw (zpid);
+
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO auto_job;
