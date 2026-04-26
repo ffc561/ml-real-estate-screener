@@ -1,0 +1,21 @@
+version: 2
+
+sources:
+  - name: raw_zillow
+    database: ml_real_estate_app
+    schema: public
+    tables:
+      - name: zillow_property_details_raw
+        description: "Raw property details extracted from US Housing Market Data API"
+        columns:
+          - name: zpid
+            tests:
+              - unique
+              - not_null
+      - name: zillow_listings_raw
+        description: "Raw listing details extracted from US Housing Market Data API"
+        columns:
+          - name: zpid
+            tests:
+              - unique
+              - not_null

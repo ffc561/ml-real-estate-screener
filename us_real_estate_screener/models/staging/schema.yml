@@ -1,0 +1,13 @@
+
+version: 2
+
+models:
+  - name: latest_zillow_listings
+    description: "A starter dbt model"
+    columns:
+      - name: zpid
+        description: "The primary key for this table"
+        data_tests:
+          - not_null
+      - name: extracted_at
+        description: "The day and time that the listing record was extracted at."
