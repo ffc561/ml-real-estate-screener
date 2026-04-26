@@ -21,7 +21,6 @@ zpids_list = [record[0] for record in extract_data(zpids_query)]
 
 property_details_list = []
 
-#Temporarily limited to first ids for testing
 print(f"Number of properties to extract data on: {len(zpids_list)}")
 
 for zpid in zpids_list:
