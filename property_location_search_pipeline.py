@@ -4,8 +4,7 @@ from datetime import datetime
 from dotenv import load_dotenv
 import time
 from housing_market_data_api_scripts.housing_market_data_extractions import UhmdApi
-from housing_market_data_api_scripts.housing_market_data_transformations import transform_property_search_json
-from db_scripts.db_utils import insert_zillow_listings_data
+from db_scripts.db_utils import upsert_zillow_data
 
 load_dotenv()
 UHMD_API_KEY = os.getenv("UHMD_API_KEY")
@@ -99,4 +98,4 @@ for result in zillow_results_list:
         if result["totalResultCount"] != 0:
             property_records.extend(result["props"])
 
-insert_zillow_listings_data(property_records)
+upsert_zillow_data(property_records, "zillow_listings_raw")
