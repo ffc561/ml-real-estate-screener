@@ -5,7 +5,7 @@ from datetime import datetime
 import time
 from dotenv import load_dotenv
 from db_scripts.db_utils import extract_data, upsert_zillow_data
-from housing_market_data_api_scripts.housing_market_data_extractions import UhmdApi
+from api_scripts.housing_market_data_extractions import UhmdApi
 
 load_dotenv()
 uhmd = UhmdApi(api_key = os.getenv("UHMD_API_KEY"), api_host = os.getenv("UHMD_API_HOST"), max_retries = 10, retry_delay = 60)

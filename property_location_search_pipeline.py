@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 from dotenv import load_dotenv
 import time
-from housing_market_data_api_scripts.housing_market_data_extractions import UhmdApi
+from api_scripts.housing_market_data_extractions import UhmdApi
 from db_scripts.db_utils import upsert_zillow_data
 
 load_dotenv()
