@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: latest_zillow_listings
+    description: "Latest listing record for each ZPID from the search results."
+    columns:
+      - name: zpid
+        data_tests:
+          - not_null
+          - unique
+
+  - name: dim_properties
+    description: "Static structural dimensions of real estate properties."
+    columns:
+      - name: property_zillow_id
+        data_tests:
+          - not_null
+          - unique
+      - name: year_built
+        description: "The year the property was built."
+      - name: living_area_sqft
+        description: "The total living area in square feet."
+
+  - name: fct_property_valuations
+    description: "Current market status, pricing, and popularity metrics for properties."
+    columns:
+      - name: property_zillow_id
+        data_tests:
+          - not_null
+          - unique
+      - name: current_price
+        data_tests:
+          - not_null:
+              config:
+                severity: warn
+
+  - name: fct_property_financials
+    description: "Current financial obligations and tax data for properties."
+    columns:
+      - name: property_zillow_id
+        data_tests:
+          - not_null
+          - unique
