@@ -6,18 +6,18 @@ WITH price_history_details AS (
 )
 
 SELECT zpid
-     , price_record->>'date' AS as_of_date
-     , price_record->>'time' AS as_of_time
+     , (price_record->>'date') :: DATE AS as_of_date
      , price_record->>'event' AS event_type
-     , price_record->>'price' AS price
+     , (price_record->>'price') :: NUMERIC(24, 2) AS price
      , price_record->>'source' AS source
      , price_record->'buyerAgent'->>'name' AS buyer_agent_name
      , price_record->'sellerAgent'->>'name' AS seller_agent_name
-     , price_record->>'showCountyLink' AS show_county_link
+     , (price_record->>'showCountyLink') :: BOOLEAN AS show_county_link
      , attribute_source->>'infoString1' AS info_string1
      , attribute_source->>'infoString2' AS info_string2
      , attribute_source->>'infoString3' AS info_string3
-     , price_record->'postingIsRental' AS is_listing_rental
-     , price_record->'priceChangeRate' AS price_change_rate
-     , price_record->'pricePerSquareFoot' AS price_per_square_foot
+     , (price_record->>'postingIsRental') :: BOOLEAN AS is_listing_rental
+     , (price_record->>'priceChangeRate') :: NUMERIC(24, 10) AS price_change_rate
+     , (price_record->>'pricePerSquareFoot') :: NUMERIC(24, 2) AS price_per_square_foot
   FROM price_history_details
+ WHERE price_record IS NOT NULL
