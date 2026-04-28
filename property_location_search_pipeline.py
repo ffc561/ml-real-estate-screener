@@ -81,7 +81,7 @@ for zip_code in zip_codes_list:
     if empty1_mask & empty2_mask & empty3_mask:
         if len(location_json) != 0:
             zillow_results_list.extend(location_json)
-    time.sleep(5)
+    time.sleep(2)
 
 extraction_dt = datetime.now().strftime("%Y%m%d%H%M%S")
 
