@@ -147,4 +147,167 @@ ON zillow_listings_raw (zpid, extracted_at);
 CREATE UNIQUE INDEX idx_property_details
 ON zillow_property_details_raw (zpid);
 
+DROP TABLE IF EXISTS public.zillow_property_transit_score;
+
+CREATE TABLE IF NOT EXISTS public.zillow_property_transit_scores (
+    zpid BIGINT PRIMARY KEY,
+    transit_score JSONB,
+    bike_score JSONB,
+    walk_score JSONB,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE UNIQUE INDEX idx_property_transit_scores
+ON zillow_property_transit_scores (zpid);
+
+DROP TABLE IF EXISTS public.zillow_property_building_details;
+
+CREATE TABLE IF NOT EXISTS public.zillow_property_building_details (
+    building_id BIGINT PRIMARY KEY,
+    -- Standard text and string fields
+    address TEXT,
+    bdp_url TEXT,
+    building_name TEXT,
+    building_phone_number TEXT,
+    building_type TEXT,
+    county TEXT,
+    description TEXT,
+    lot_id TEXT,
+    neighborhood TEXT,
+    -- Numeric and geographic fields
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
+    photo_count INTEGER,
+    -- Boolean flags
+    is_low_income BOOLEAN,
+    is_senior_housing BOOLEAN,
+    is_student_housing BOOLEAN,
+    -- Complex objects and arrays stored as JSONB for efficient querying
+    amenity_details JSONB,
+    amenity_summary JSONB,
+    assigned_schools JSONB,
+    bike_score JSONB,
+    building_attributes JSONB,
+    floor_plans JSONB,
+    housing_connector JSONB,
+    photos JSONB,
+    special_offers JSONB,
+    transit_score JSONB,
+    ungrouped_units JSONB,
+    walk_score JSONB,
+    -- Audit timestamps (Optional but recommended)
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE UNIQUE INDEX idx_buildings
+ON zillow_property_building_details (building_id);
+
+DROP TABLE IF EXISTS public.zillow_propery_comps;
+
+CREATE TABLE IF NOT EXISTS public.zillow_property_comps (
+    -- Core Property Identifiers and Attributes
+    comp_zpid BIGINT,
+    price NUMERIC,
+    currency TEXT,
+    bedrooms INTEGER,
+    bathrooms NUMERIC,
+    
+    -- Area and Sizing
+    living_area NUMERIC,
+    living_area_value NUMERIC,
+    living_area_units TEXT,
+    living_area_units_short TEXT,
+    lot_size NUMERIC,
+    lot_area_value NUMERIC,
+    lot_area_units TEXT,
+    
+    -- Location Coordinates and Basic Info
+    latitude DOUBLE PRECISION,
+    longitude DOUBLE PRECISION,
+    state TEXT,
+    
+    -- Property Status and Categorization
+    home_status TEXT,
+    home_type TEXT,
+    hdp_url TEXT,
+    hdp_type_dimension TEXT,
+    property_type_dimension TEXT,
+    listing_type_dimension TEXT,
+    provider_listing_id TEXT,
+    new_construction_type TEXT,
+    
+    -- Boolean Flags
+    is_showcase_listing BOOLEAN,
+    is_premier_builder BOOLEAN,
+    
+    -- Complex Nested Objects and Arrays (Stored as JSONB)
+    mini_card_photos JSONB,
+    listing_metadata JSONB,
+    address JSONB,
+    parent_region JSONB,
+    formatted_chip JSONB,
+    listing_sub_type JSONB,
+    attribution_info JSONB,
+    
+    -- Audit Timestamps
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+
+    -- Unique constraint to facilitate Python ON CONFLICT upsert logic
+    CONSTRAINT uq_building_id UNIQUE (zpid, created_at)
+);
+
+DROP TABLE IF EXISTS public.zillow_monthly_inventory;
+
+CREATE TABLE IF NOT EXISTS public.zillow_monthly_inventory (    
+    -- Core Dimensions
+    month_date_yyyymm INTEGER NOT NULL,
+    postal_code TEXT NOT NULL,
+    
+    -- Listing Counts
+    active_listing_count INTEGER,
+    active_listing_count_mm NUMERIC,
+    new_listing_count INTEGER,
+    new_listing_count_mm NUMERIC,
+    total_listing_count INTEGER,
+    total_listing_count_mm NUMERIC,
+    
+    -- Pricing Metrics
+    average_listing_price NUMERIC,
+    average_listing_price_mm NUMERIC,
+    median_listing_price NUMERIC,
+    median_listing_price_mm NUMERIC,
+    price_increased_count INTEGER,
+    price_increased_count_mm NUMERIC,
+    
+    -- Days on Market
+    median_days_on_market INTEGER,
+    median_days_on_market_mm NUMERIC,
+    
+    -- Audit Timestamps
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    
+    -- Unique constraint to facilitate Python ON CONFLICT upsert logic
+    CONSTRAINT uq_monthly_inventory_period_zip UNIQUE (month_date_yyyymm, postal_code)
+);
+
+DROP TABLE IF EXISTS public.zillow_property_comps;
+
+CREATE TABLE IF NOT EXISTS public.zillow_property_comps (    
+    -- Core Dimensions
+    zpid BIGINT PRIMARY KEY,
+    as_of_date DATE,
+    comps JSONB,
+    
+    -- Audit Timestamps
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    
+    -- Unique constraint to facilitate Python ON CONFLICT upsert logic
+    CONSTRAINT uq_zpid_pc UNIQUE (zpid)
+);
+
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO auto_job;
