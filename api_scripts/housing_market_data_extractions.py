@@ -85,3 +85,52 @@ class UhmdApi():
         url = self.root_url + "/property"
         params = {"zpid" : property_zpid}
         return self.call_api(url, params)
+
+    def get_transit_scores_by_zpid(self, property_zpid):
+        url = self.root_url + "/walkAndTransitScore"
+        params = {"zpid" : property_zpid}
+        return self.call_api(url, params)
+    
+    def get_building_details(self, building_id):
+        url = self.root_url + "/building"
+        params = {"buildingId" : building_id}
+        return self.call_api(url, params)
+
+    def get_property_comps(self, zpid):
+        url = self.root_url + "/propertyComps"
+        params = {"zpid" : zpid}
+        return self.call_api(url, params)
+    
+    def get_property_similar_sales(self, zpid):
+        url = self.root_url + "/similarSales"
+        params = {"zpid" : zpid}
+        return self.call_api(url, params)
+
+    def get_monthly_inventory(self, zipcode):
+        url = self.root_url + "/residentialData/monthlyInventory"
+        params = {"zip" : zipcode}
+
+        data = self.call_api(url, params)
+        
+        results_list = []
+
+        if data is not None:
+            if data["totalCount"] != 0:
+                total_pages = int(data["totalCount"] / 100) + 1
+                if total_pages > 1:
+                    results_list.extend(data["records"])
+                    page_num = 2
+                    while page_num <= total_pages:
+                        params["page"] = page_num
+                        data=self.call_api(url, params)
+                        results_list.extend(data["records"])
+                        page_num += 1
+                else:
+                    results_list = data["records"]
+                    
+        return results_list
+    
+    def get_off_market_listings(self, zipcode):
+        url = self.root_url + "/offMarket"
+        params = {"zip" : zipcode}
+        return self.call_api(url, params)
