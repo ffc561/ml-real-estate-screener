@@ -14,7 +14,7 @@ zpids_query = f"""
 SELECT DISTINCT zpid
   FROM public.zillow_listings_raw
  WHERE zpid NOT IN (SELECT DISTINCT zpid FROM public.zillow_property_details_raw)
- LIMIT 250
+ LIMIT 500
 """
 
 zpids_list = [record[0] for record in extract_data(zpids_query)]
