@@ -16,7 +16,7 @@ building_ids_sql = """
     SELECT DISTINCT building_id
       FROM public.zillow_property_details_raw
      WHERE building_id :: BIGINT NOT IN (SELECT DISTINCT building_id FROM public.zillow_property_building_details)
-     LIMIT 5
+     LIMIT 200
 """
 
 building_ids = [record[0] for record in extract_data(building_ids_sql)]
@@ -24,14 +24,19 @@ building_ids = [record[0] for record in extract_data(building_ids_sql)]
 building_details = []
 
 for building_id in building_ids:
+
+    print(f"Building ID: {building_id}")
     detail = uhmd.get_building_details(building_id)
-    if detail is not None:
-        detail["building_id"] = building_id
-        building_details.append(detail)
-    else:
-        print(f"Building deatils not found for {building_id}.  Skipping.")
-    
-    time.sleep(2)
+    print(detail)
+
+    if (detail is None) | (detail == []):
+        detail = {}
+        print(f"Building details not found for {building_id}. Creating stub record.")
+
+    detail["building_id"] = building_id
+    building_details.append(detail)
+
+    time.sleep(1)
 
 extraction_dt = datetime.now().strftime("%Y%m%d%H%M%S")
 
