@@ -12,14 +12,14 @@ UHMD_API_HOST = os.getenv("UHMD_API_HOST")
 
 uhmd = UhmdApi(api_key = UHMD_API_KEY, api_host = UHMD_API_HOST, max_retries = 10, retry_delay = 30)
 
-similar_sales_sql = """
+property_comps_sql = """
     SELECT DISTINCT zpid
       FROM public.zillow_listings_raw
      WHERE zpid NOT IN (SELECT DISTINCT zpid FROM public.zillow_property_comps)
      LIMIT 1
 """
 
-comps_zpids = [record[0] for record in extract_data(similar_sales_sql)]
+comps_zpids = [record[0] for record in extract_data(property_comps_sql)]
 
 comps_details = []
 
