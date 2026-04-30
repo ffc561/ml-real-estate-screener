@@ -16,7 +16,7 @@ building_ids_sql = """
     SELECT DISTINCT building_id
       FROM public.zillow_property_details_raw
      WHERE building_id :: BIGINT NOT IN (SELECT DISTINCT building_id FROM public.zillow_property_building_details)
-     LIMIT 200
+     LIMIT 500
 """
 
 building_ids = [record[0] for record in extract_data(building_ids_sql)]
