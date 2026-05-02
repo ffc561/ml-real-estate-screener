@@ -14,9 +14,10 @@ uhmd = UhmdApi(api_key = UHMD_API_KEY, api_host = UHMD_API_HOST, max_retries = 1
 
 property_comps_sql = """
     SELECT DISTINCT zpid
-      FROM public.zillow_listings_raw
+      FROM public.zillow_property_details_raw 
      WHERE zpid NOT IN (SELECT DISTINCT zpid FROM public.zillow_property_comps)
-     LIMIT 100
+       AND home_status = 'FOR_SALE'
+     LIMIT 200
 """
 
 comps_zpids = [record[0] for record in extract_data(property_comps_sql)]
@@ -24,6 +25,7 @@ comps_zpids = [record[0] for record in extract_data(property_comps_sql)]
 comps_details = []
 
 for zpid in comps_zpids:
+    print(f"ZPID: {zpid}")
     detail = uhmd.get_property_comps(zpid)
     if detail is not None:
         record = {}
@@ -34,7 +36,7 @@ for zpid in comps_zpids:
     else:
         print(f"Transit scores not found for {zpid}.  Skipping.")
     
-    time.sleep(2)
+    time.sleep(1)
 
 extraction_dt = datetime.now().strftime("%Y%m%d%H%M%S")
 
