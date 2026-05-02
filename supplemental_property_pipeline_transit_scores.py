@@ -14,8 +14,9 @@ uhmd = UhmdApi(api_key = UHMD_API_KEY, api_host = UHMD_API_HOST, max_retries = 1
 
 transit_scores_sql = """
     SELECT DISTINCT zpid
-      FROM public.zillow_listings_raw
+      FROM public.zillow_property_details
      WHERE zpid NOT IN (SELECT DISTINCT zpid FROM public.zillow_property_transit_scores)
+       AND building_id IS NULL
      LIMIT 5
 """
 
