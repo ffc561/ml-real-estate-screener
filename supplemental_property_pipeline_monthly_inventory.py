@@ -2,7 +2,6 @@ import os
 import json
 from datetime import datetime
 from dotenv import load_dotenv
-import time
 from api_scripts.housing_market_data_extractions import UhmdApi
 from db_scripts.db_utils import extract_data, upsert_zillow_data
 
@@ -13,8 +12,55 @@ UHMD_API_HOST = os.getenv("UHMD_API_HOST")
 uhmd = UhmdApi(api_key = UHMD_API_KEY, api_host = UHMD_API_HOST, max_retries = 10, retry_delay = 30)
 
 zip_codes_list = [
+    "33401",
+    "33402",
+    "33403",
+    "33404",
+    "33405",
+    "33406",
     "33407",
-    "33415"
+    "33408",
+    "33409",
+    "33410",
+    "33411",
+    "33412",
+    "33413",
+    "33414",
+    "33415",
+    "33416",
+    "33417",
+    "33426",
+    "33428",
+    "33431",
+    "33432",
+    "33433",
+    "33434",
+    "33435",
+    "33436",
+    "33437",
+    "33438",
+    "33444",
+    "33445",
+    "33446",
+    "33458",
+    "33460",
+    "33461",
+    "33462",
+    "33463",
+    "33467",
+    "33469",
+    "33470",
+    "33472",
+    "33473",
+    "33475",
+    "33477",
+    "33478",
+    "33480",
+    "33483",
+    "33484",
+    "33486",
+    "33487",
+    "33496"
 ]
 
 inventory_details = []
