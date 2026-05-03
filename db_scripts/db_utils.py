@@ -51,9 +51,6 @@ def upsert_zillow_data(json_payload, db_table_name, historical_upload=False, fil
         records_processed = 0
 
         for item in data:
-            if "zpid" not in item:
-                print("zpid not found. Skipping record load.")
-                continue # Skip records missing the Primary Key
 
             columns = []
             values = []
@@ -101,8 +98,12 @@ def upsert_zillow_data(json_payload, db_table_name, historical_upload=False, fil
 
             if db_table_name == "zillow_listings_raw":
                 conflict_keys = "zpid, extracted_at"
-            elif db_table_name == "zillow_property_details_raw":
+            elif db_table_name in ["zillow_property_details_raw", "zillow_property_transit_scores", "zillow_property_similar_sales", "zillow_property_comps"]:
                 conflict_keys = "zpid"
+            elif db_table_name == "zillow_property_building_details":
+                conflict_keys = "building_id"
+            elif db_table_name == "zillow_monthly_inventory":
+                conflict_keys = "month_date_yyyymm, postal_code"
 
             # 3. Construct the UPSERT query
             # created_at defaults to current timestamp automatically on insert

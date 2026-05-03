@@ -41,3 +41,23 @@ models:
         data_tests:
           - not_null
           - unique
+
+  - name: zillow_property_comp_details
+    description: "Parsed comparable sales data for properties, linking target ZPIDs to their comparable ZPIDs."
+    columns:
+      - name: target_property_zpid
+        data_tests:
+          - not_null
+      - name: comp_zpid
+        data_tests:
+          - not_null
+
+  - name: zillow_monthly_metrics
+    description: "Monthly real estate inventory and pricing metrics aggregated by zip code."
+    columns:
+      - name: month_date
+        data_tests:
+          - not_null
+      - name: postal_code
+        data_tests:
+          - not_null

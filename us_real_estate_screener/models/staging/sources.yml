@@ -19,3 +19,25 @@ sources:
             tests:
               - unique
               - not_null
+      - name: zillow_property_comps
+        description: "Raw comparable sales data for properties"
+        columns:
+          - name: zpid
+            tests:
+              - not_null
+      - name: zillow_monthly_inventory
+        description: "Raw monthly inventory and pricing metrics by postal code"
+        columns:
+          - name: month_date_yyyymm
+            tests:
+              - not_null
+          - name: postal_code
+            tests:
+              - not_null
+      - name: zillow_property_building_details
+        description: "Detailed information about residential buildings"
+        columns:
+          - name: building_id
+            tests:
+              - not_null
+              - unique
