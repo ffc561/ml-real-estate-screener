@@ -71,8 +71,6 @@ for zip_code in zip_codes_list:
     if detail is not None:
         inventory_details.extend(detail)
 
-print(inventory_details)
-
 extraction_dt = datetime.now().strftime("%Y%m%d%H%M%S")
 
 json_filepath = f"./temp_files/zillow_monthly_inventory_{extraction_dt}.json"
