@@ -17,7 +17,7 @@ property_comps_sql = """
       FROM public.zillow_property_details_raw 
      WHERE zpid NOT IN (SELECT DISTINCT zpid FROM public.zillow_property_comps)
        AND home_status = 'FOR_SALE'
-     LIMIT 200
+     LIMIT 5
 """
 
 comps_zpids = [record[0] for record in extract_data(property_comps_sql)]
