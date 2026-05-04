@@ -5,4 +5,4 @@ SELECT DISTINCT zpid
              FROM public.zillow_property_comps
        )
    AND home_status = 'FOR_SALE'
- LIMIT 200
+ LIMIT 5
