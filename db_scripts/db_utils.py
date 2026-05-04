@@ -22,13 +22,15 @@ def camel_to_snake(name):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
-def extract_data(query):
+def extract_data(query, params=()):
     
     try:
+        if params == ():
+            params = (True, )
         # Establish database connection
         conn = psycopg2.connect(**DB_CONFIG)
         cur = conn.cursor()
-        cur.execute(query, (True,))
+        cur.execute(query, params)
         rows = cur.fetchall()
         return rows
     except Exception as e:
