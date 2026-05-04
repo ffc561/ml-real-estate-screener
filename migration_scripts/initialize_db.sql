@@ -310,4 +310,22 @@ CREATE TABLE IF NOT EXISTS public.zillow_property_comps (
     CONSTRAINT uq_zpid_pc UNIQUE (zpid)
 );
 
+DROP TABLE IF EXISTS public.elt_job_parameters;
+
+CREATE TABLE IF NOT EXISTS public.elt_job_parameters (
+    job_type VARCHAR(255),
+    data_source VARCHAR(255),
+    input_id VARCHAR(255),
+    payload_compilation_method VARCHAR(255),
+    empty_record_handling_method VARCHAR(255)
+);
+
+INSERT INTO public.elt_job_parameters (job_type, data_source, input_id, payload_compilation_method) 
+VALUES ('zillow_listings_raw', 'uhmd', 'zip_code', 'extend', 'skip'),
+       ('zillow_property_details', 'uhmd', 'zpid', 'append', 'stub'),
+       ('zillow_property_comps', 'uhmd', 'zpid', 'append', 'stub'),
+       ('zillow_property_building_details', 'uhmd', 'building_id', 'append', 'stub'),
+       ('zillow_property_transit_scores', 'uhmd', 'zpid', 'append', 'stub'),
+       ('zillow_monthly_inventory', 'uhmd', 'zip_code', 'extend', 'skip');
+
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO auto_job;
