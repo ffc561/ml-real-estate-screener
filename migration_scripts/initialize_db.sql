@@ -320,9 +320,9 @@ CREATE TABLE IF NOT EXISTS public.elt_job_parameters (
     empty_record_handling_method VARCHAR(255)
 );
 
-INSERT INTO public.elt_job_parameters (job_type, data_source, input_id, payload_compilation_method) 
+INSERT INTO public.elt_job_parameters (job_type, data_source, input_id, payload_compilation_method, empty_record_handling_method)
 VALUES ('zillow_listings_raw', 'uhmd', 'zip_code', 'extend', 'skip'),
-       ('zillow_property_details', 'uhmd', 'zpid', 'append', 'stub'),
+       ('zillow_property_details_raw', 'uhmd', 'zpid', 'append', 'stub'),
        ('zillow_property_comps', 'uhmd', 'zpid', 'append', 'stub'),
        ('zillow_property_building_details', 'uhmd', 'building_id', 'append', 'stub'),
        ('zillow_property_transit_scores', 'uhmd', 'zpid', 'append', 'stub'),
